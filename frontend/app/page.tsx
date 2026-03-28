@@ -93,7 +93,7 @@ export default function Home() {
 
   return (
     <>
-      <h1 className="sectionTitle">Polymarket Impulse Bot Dashboard</h1>
+      <h1 className="sectionTitle">Polymarket Impulse Monitoring Bot — Dashboard</h1>
 
       <div className="statusGrid">
         <div className="card">

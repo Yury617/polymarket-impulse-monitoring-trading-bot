@@ -17,8 +17,9 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Polymarket Impulse Bot",
-  description: "Detect sudden price impulses, buy rising side, trail and hedge",
+  title: "Polymarket Impulse Monitoring Bot",
+  description:
+    "Monitor Polymarket Up/Down markets, detect price impulses, and manage the trading bot from a live dashboard.",
 };
 
 export default function RootLayout({
@@ -33,7 +34,7 @@ export default function RootLayout({
           <header className="layoutHeader">
             <div className="layoutHeaderInner">
               <Link href="/" className="appTitle">
-                Polymarket Impulse Bot
+                Polymarket Impulse Monitoring Bot
               </Link>
               <nav className="nav">
                 <Link href="/" className="navLink">

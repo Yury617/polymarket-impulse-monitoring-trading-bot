@@ -1,6 +1,7 @@
 {
-  "name": "polymarket-impulse-bot-frontend",
+  "name": "polymarket-impulse-monitoring-bot-frontend",
   "version": "1.0.0",
+  "description": "Polymarket Impulse Monitoring Bot — Next.js dashboard",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3004",
